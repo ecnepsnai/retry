@@ -1,4 +1,22 @@
-// Package retry A utility to invoke a method that might fail, but should eventually succeed.
+/*
+Package retry A utility to invoke a method that might fail, but should eventually succeed.
+
+Simple retry
+
+	retry.Try(func() error {
+		return SomethingThatMightFail()
+	}, 5)
+
+Asynchronous retry
+
+	retry.TryAsync(func() error {
+		return SomethingThatMightFail()
+	}, 5, func(err error) {
+		if err != nil {
+			panic(err.Error())
+		}
+	})
+*/
 package retry
 
 import (
