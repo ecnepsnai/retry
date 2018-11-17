@@ -1,13 +1,13 @@
 /*
 Package retry A utility to invoke a method that might fail, but should eventually succeed.
 
-Simple retry
+Simple retry:
 
 	retry.Try(func() error {
 		return SomethingThatMightFail()
 	}, 5)
 
-Asynchronous retry
+Asynchronous retry:
 
 	retry.TryAsync(func() error {
 		return SomethingThatMightFail()
@@ -20,9 +20,10 @@ Asynchronous retry
 package retry
 
 import (
-	"fmt"
 	"reflect"
 	"runtime"
+
+	"github.com/ecnepsnai/logtic"
 )
 
 // TryAsync try to invoke the given method asynchronously. If unsuccessful, retry for the specified number of tries.
@@ -35,6 +36,8 @@ func TryAsync(method func() error, times int, finished func(error)) {
 
 // Try try to invoke the given method. If unsuccessful, retry for the specified number of tries.
 func Try(method func() error, times int) error {
+	functionName := getFunctionName(method)
+	log := logtic.Connect("retry:" + functionName)
 	i := 0
 	var err error
 	for i < times {
@@ -42,7 +45,7 @@ func Try(method func() error, times int) error {
 		if err == nil {
 			return nil
 		}
-		fmt.Printf("Invocation %s failed with error: %s, attempt: %d/%d\n", getFunctionName(method), err.Error(), i+1, times)
+		log.Warn("Invocation %s failed with error: %s, attempt: %d/%d\n", functionName, err.Error(), i+1, times)
 		i++
 	}
 	return err
