@@ -1,14 +1,16 @@
-package retry
+package retry_test
 
 import (
 	"fmt"
 	"testing"
 	"time"
+
+	"github.com/ecnepsnai/retry"
 )
 
 func TestTry(t *testing.T) {
 	i := 0
-	err := Try(func() error {
+	err := retry.Try(func() error {
 		if i < 5 {
 			i++
 			return fmt.Errorf("Nope")
@@ -23,7 +25,7 @@ func TestTry(t *testing.T) {
 func TestTryAsync(t *testing.T) {
 	finished := false
 	i := 0
-	TryAsync(func() error {
+	retry.TryAsync(func() error {
 		if i < 5 {
 			i++
 			return fmt.Errorf("Nope")
