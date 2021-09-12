@@ -25,7 +25,7 @@ func TryAsync(method func() error, times int, finished func(error)) {
 // If successful nil is returned.
 func Try(method func() error, times int) error {
 	functionName := getFunctionName(method)
-	log := logtic.Connect("retry(" + functionName + ")")
+	log := logtic.Log.Connect("retry(" + functionName + ")")
 	i := 0
 	var err error
 	for i < times {
